@@ -70,6 +70,13 @@ The goal of Day 1 was to build the basic infrastructure needed to learn, documen
 - Reviewed the importance of wallet security and the Secret Recovery Phrase
 - Understood the wallet’s role as the access point for DeFi applications and on-chain signing
 
+### 4. Wallet Readiness
+- Installed and initialized MetaMask
+- Verified access to the wallet interface
+- Confirmed that I can view my wallet address
+- Saved the recovery phrase securely
+- Completed the wallet setup needed for future DeFi interaction
+
 ## Key Takeaways
 - GitHub can serve as both a documentation tool and a public proof-of-work platform
 - A functional local environment is an important prerequisite for future protocol research, scripting, dashboards, and Web3 development
