@@ -118,3 +118,7 @@ On Day 2, I will focus on foundational concepts:
 - EOA vs smart contract account
 
 I will continue documenting progress in this repository and push all updates publicly.
+
+## Day 2 Process
+
+I have learned how to read a transaction on etherscan. I have learned that the difference between normal transaction and interaction with smart contract(internal transactions/Input data). 
