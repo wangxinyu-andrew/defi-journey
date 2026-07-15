@@ -11,12 +11,12 @@ contract MiniStablecoin{
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    modifier onlyVault(){
+    modifier onlyVault() {
         require(msg.sender == vault, "Only Vault");
         _;
     } 
 
-    constructor(){
+    constructor() {
         vault = msg.sender;
     }
 
