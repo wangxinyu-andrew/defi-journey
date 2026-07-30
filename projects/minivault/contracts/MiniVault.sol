@@ -43,4 +43,24 @@ contract MiniVault{
         uint256 ratio = _collateralValue(user) * 100e18 / debt[user];//这里的抵押率为什么不能写成小数
         return ratio >= MIN_COLLATERAL_RATIO;
     }
+
+    function borrow(uint256 amount) external{
+        require(amount > 0, "Need amount");
+        
+        debt[msg.sender] += amount;
+
+        require(_isHealthy(msg.sender), "Not enought collateral");
+
+        stablecoin.mint(msg.sender, amount);
+    }
+
+    function repay(uint256 amount) external{
+        require(amount > 0, "Need amouny");
+        require(debt[msg.sender] >= amount, "Too much repay");
+
+        stablecoin.transferFrom(msg.sender, address(this), amount);
+        stablecoin.burn(address(this), amount);
+
+        debt[msg.sender] -= amount;  //注意这里repay完要把debt更新
+    }
 }
