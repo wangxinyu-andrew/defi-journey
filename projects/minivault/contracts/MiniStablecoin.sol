@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 contract MiniStablecoin{
     string public name = "Mini USD";
-    string public symbole = "mUSD";
+    string public symbol = "mUSD";
     uint8 public decimals = 18;
 
     uint256 public totalSupply;

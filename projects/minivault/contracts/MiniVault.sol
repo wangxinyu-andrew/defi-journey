@@ -35,7 +35,7 @@ contract MiniVault{
         return collateralETH[user] * ETH_PRICE / 1e18;
     }//这个函数的 internal、view ？？还有returns和内部的return我又有点乱了
 
-    function _isHealthy(address user) internal view returns(bool){
+    function _isHealthy(address user) internal view returns(bool) {
         if (debt[user] == 0){//注意这里是[]
             return ture;
         }
@@ -44,7 +44,7 @@ contract MiniVault{
         return ratio >= MIN_COLLATERAL_RATIO;
     }
 
-    function borrow(uint256 amount) external{
+    function borrow(uint256 amount) external {
         require(amount > 0, "Need amount");
         
         debt[msg.sender] += amount;
@@ -54,7 +54,7 @@ contract MiniVault{
         stablecoin.mint(msg.sender, amount);
     }
 
-    function repay(uint256 amount) external{
+    function repay(uint256 amount) external {
         require(amount > 0, "Need amouny");
         require(debt[msg.sender] >= amount, "Too much repay");
 
