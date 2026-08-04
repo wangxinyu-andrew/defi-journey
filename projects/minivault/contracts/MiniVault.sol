@@ -12,6 +12,9 @@ contract MiniVault{
     uint256 public constant ETH_PRICE = 3000e18;
     uint256 public constant MIN_COLLATERAL_RATIO = 150e18;
 
+    uint256 public constant BPS_DENOMINATOR = 10_000;
+    uint256 public constant LIQUIDATION_BONUS_BPS =1_000;
+
     constructor() {
         stablecoin = new MiniStablecoin();
     }
@@ -37,7 +40,7 @@ contract MiniVault{
 
     function _isHealthy(address user) internal view returns(bool) {
         if (debt[user] == 0){//注意这里是[]
-            return ture;
+            return true;
         }
 
         uint256 ratio = _collateralValue(user) * 100e18 / debt[user];//这里的抵押率为什么不能写成小数
@@ -49,18 +52,46 @@ contract MiniVault{
         
         debt[msg.sender] += amount;
 
-        require(_isHealthy(msg.sender), "Not enought collateral");
+        require(_isHealthy(msg.sender), "Not enough collateral");
 
         stablecoin.mint(msg.sender, amount);
     }
 
     function repay(uint256 amount) external {
-        require(amount > 0, "Need amouny");
+        require(amount > 0, "Need amount");
         require(debt[msg.sender] >= amount, "Too much repay");
 
         stablecoin.transferFrom(msg.sender, address(this), amount);
         stablecoin.burn(address(this), amount);
 
         debt[msg.sender] -= amount;  //注意这里repay完要把debt更新
+    }
+
+    function collteralRatio(address user) public view returns(uint256) {
+        if (debt[user] == 0) {
+            return type(uint256).max;
+        }
+
+        return _collateralValue(user) * 100e18 / debt[user];
+    }
+
+    function liquidate(address user, uint256 repayAmount) external {
+        require(!_isHealthy(user), "User is healthy");
+        require(repayAmount > 0, "Need repay amount");
+        require(debt[user] >= repayAmount, "Too much repay");
+
+        uint256 collateralToSeize = repayAmount * 1e18 / ETH_PRICE;
+        uint256 bonus = collateralToSeize * LIQUIDATION_BONUS_BPS /BPS_DENOMINATOR;
+        uint totalCollateral = collateralToSeize + bonus;
+
+        require(collateralETH[user] >= totalCollateral, "Not enough collateral");
+        
+        stablecoin.transferFrom(msg.sender, this(address), repayAmount);
+        stablecoin.burn(this(address), repayAmount);
+
+        debt[user] -= repayAmount;
+        collateralETH[user] -= totalCollateral;
+
+        payable(msg.sender).transfer(totalCollateral);
     }
 }

@@ -45,12 +45,12 @@ contract MiniStablecoin{
         return true;
     }
 
-    function mint(address to, uint256 amount) external onlyVault{
+    function mint(address to, uint256 amount) external onlyVault {
         balanceOf[to] += amount;
         totalSupply += amount;
     }
 
-    function burn(address from, uint256 amount) external onlyVault{
+    function burn(address from, uint256 amount) external onlyVault {
         require(balanceOf[from] >= amount, "Insufficient balance");
 
         balanceOf[from] -= amount;
