@@ -31,7 +31,8 @@ contract MiniVault{
 
         require(_isHealthy(msg.sender), "Position would be unhealthy");
 
-        payable(msg.sender).transfer(amount);
+        (bool suceess, ) = payable(msg.sender).call{value: amount}("");
+        require(suceess, "ETH transfer failed");
     }
 
     function _collateralValue(address user) internal view returns(uint256) {
@@ -86,12 +87,13 @@ contract MiniVault{
 
         require(collateralETH[user] >= totalCollateral, "Not enough collateral");
         
-        stablecoin.transferFrom(msg.sender, this(address), repayAmount);
-        stablecoin.burn(this(address), repayAmount);
+        stablecoin.transferFrom(msg.sender, address(this), repayAmount);
+        stablecoin.burn(address(this), repayAmount);
 
         debt[user] -= repayAmount;
         collateralETH[user] -= totalCollateral;
 
-        payable(msg.sender).transfer(totalCollateral);
+        (bool success, ) = payable(msg.sender).call{value: totalCollateral}("");
+        require(success, "ETH transfer failed");
     }
 }
