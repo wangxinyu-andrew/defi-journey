@@ -108,3 +108,10 @@
 - Test successful and failed liquidation cases
 - Learn basic reentrancy and CEI
 - Start learning Foundry or Hardhat
+
+## Researcher Note
+
+I am not learning DeFi by passively watching courses.  
+I am rebuilding minimal versions of core protocols and learning through failure.
+
+MiniVault v0 is my first step toward understanding low-risk DeFi infrastructure.
