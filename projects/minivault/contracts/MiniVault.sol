@@ -31,8 +31,8 @@ contract MiniVault{
 
         require(_isHealthy(msg.sender), "Position would be unhealthy");
 
-        (bool suceess, ) = payable(msg.sender).call{value: amount}("");
-        require(suceess, "ETH transfer failed");
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "ETH transfer failed");
     }
 
     function _collateralValue(address user) internal view returns(uint256) {
@@ -68,7 +68,7 @@ contract MiniVault{
         debt[msg.sender] -= amount;  //注意这里repay完要把debt更新
     }
 
-    function collteralRatio(address user) public view returns(uint256) {
+    function collateralRatio(address user) public view returns(uint256) {
         if (debt[user] == 0) {
             return type(uint256).max;
         }
@@ -83,7 +83,7 @@ contract MiniVault{
 
         uint256 collateralToSeize = repayAmount * 1e18 / ETH_PRICE;
         uint256 bonus = collateralToSeize * LIQUIDATION_BONUS_BPS /BPS_DENOMINATOR;
-        uint totalCollateral = collateralToSeize + bonus;
+        uint256 totalCollateral = collateralToSeize + bonus;
 
         require(collateralETH[user] >= totalCollateral, "Not enough collateral");
         
